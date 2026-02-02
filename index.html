@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>3D City Coin Racer</title>
+  <title>Valentine City Racer 💖</title>
   <style>
     body {
       margin: 0;
@@ -10,7 +10,7 @@
       background: black;
       font-family: Arial, sans-serif;
     }
-    #hud {
+    #ui {
       position: absolute;
       top: 10px;
       left: 10px;
@@ -18,11 +18,26 @@
       font-size: 18px;
       z-index: 10;
     }
+    #message {
+      position: absolute;
+      top: 40%;
+      width: 100%;
+      text-align: center;
+      font-size: 32px;
+      color: pink;
+      display: none;
+      z-index: 20;
+    }
   </style>
 </head>
 <body>
 
-<div id="hud">Coins: <span id="score">0</span></div>
+<div id="ui">
+  Level: <span id="level">1</span> |
+  Hearts: <span id="score">0</span>
+</div>
+
+<div id="message"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 <script src="main.js"></script>
