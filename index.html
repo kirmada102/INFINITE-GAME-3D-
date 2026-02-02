@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Valentine: Neon Skies</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: black;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    #hud {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      color: #ffffff;
+      font-size: 16px;
+      letter-spacing: 1px;
+      z-index: 10;
+      opacity: 0.9;
+    }
+
+    #title {
+      position: fixed;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      color: rgba(255, 182, 193, 0.9);
+      font-size: 14px;
+      letter-spacing: 4px;
+      z-index: 10;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="hud">
+    <div>MODE: PROTOTYPE</div>
+    <div>PLAYER: GIRL</div>
+    <div>COMPANION: ROBO BOY</div>
+  </div>
+
+  <div id="title">VALENTINE : NEON SKIES</div>
+
+  <!-- THREE.JS -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+  <!-- GAME -->
+  <script src="main.js"></script>
+
+</body>
+</html>
