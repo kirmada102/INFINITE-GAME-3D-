@@ -264,7 +264,7 @@ class WeatherSystem {
       drop.position.set(
         (Math.random() - 0.5) * 60,
         Math.random() * 40 + 5,
-        -Math.random() * 400
+        -Math.random() * 6000
       );
 
       this.scene.add(drop);
@@ -279,7 +279,7 @@ class WeatherSystem {
 
       if (d.position.y < 0) {
         d.position.y = Math.random() * 40 + 20;
-        d.position.z -= 400;
+        d.position.z -= 6000;
       }
     });
   }
