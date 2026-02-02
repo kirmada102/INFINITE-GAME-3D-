@@ -182,7 +182,131 @@ class RoboBoy {
     this.mesh.position.lerp(desired, 0.05);
   }
 }
+/* ============================================================
+   ENVIRONMENT: FUTURISTIC CITY SYSTEM
+   ============================================================ */
+class NeonCity {
+  constructor(scene) {
+    this.scene = scene;
+    this.buildings = [];
+    this.spawnDistance = 400;
+    this.buildCity();
+  }
 
+  buildCity() {
+    for (let i = 0; i < 120; i++) {
+      this.spawnBuilding(-8, -i * 8);
+      this.spawnBuilding(8, -i * 8);
+    }
+  }
+
+  spawnBuilding(x, z) {
+    const height = THREE.MathUtils.randFloat(4, 16);
+
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x110022,
+      emissive: new THREE.Color(
+        Math.random() * 0.5,
+        Math.random() * 0.2,
+        Math.random()
+      ),
+      emissiveIntensity: 1.5,
+      metalness: 0.8,
+      roughness: 0.2
+    });
+
+    const building = new THREE.Mesh(
+      new THREE.BoxGeometry(4, height, 4),
+      material
+    );
+
+    building.position.set(x, height / 2, z);
+    this.scene.add(building);
+
+    this.buildings.push({
+      mesh: building,
+      baseHeight: height,
+      pulseOffset: Math.random() * Math.PI * 2
+    });
+  }
+
+  update(delta) {
+    this.buildings.forEach(b => {
+      b.pulseOffset += delta;
+      b.mesh.material.emissiveIntensity =
+        1.2 + Math.sin(b.pulseOffset * 2) * 0.5;
+
+      if (b.mesh.position.z > 10) {
+        b.mesh.position.z -= this.spawnDistance;
+      }
+    });
+  }
+}
+/* ============================================================
+   ENVIRONMENT: WEATHER SYSTEM (PIXEL RAIN)
+   ============================================================ */
+class WeatherSystem {
+  constructor(scene) {
+    this.scene = scene;
+    this.drops = [];
+    this.maxDrops = 1200;
+    this.initRain();
+  }
+
+  initRain() {
+    const geometry = new THREE.BoxGeometry(0.05, 0.35, 0.05);
+    const material = new THREE.MeshBasicMaterial({
+      color: 0x88ccff
+    });
+
+    for (let i = 0; i < this.maxDrops; i++) {
+      const drop = new THREE.Mesh(geometry, material);
+      drop.position.set(
+        (Math.random() - 0.5) * 60,
+        Math.random() * 40 + 5,
+        -Math.random() * 400
+      );
+
+      this.scene.add(drop);
+      this.drops.push(drop);
+    }
+  }
+
+  update(delta) {
+    this.drops.forEach(d => {
+      d.position.y -= delta * 30;
+      d.position.z += delta * 40;
+
+      if (d.position.y < 0) {
+        d.position.y = Math.random() * 40 + 20;
+        d.position.z -= 400;
+      }
+    });
+  }
+}
+/* ============================================================
+   ENVIRONMENT: SKY SYSTEM
+   ============================================================ */
+class SkySystem {
+  constructor(scene) {
+    this.scene = scene;
+
+    const geometry = new THREE.SphereGeometry(300, 32, 32);
+    const material = new THREE.MeshBasicMaterial({
+      color: 0x090014,
+      side: THREE.BackSide
+    });
+
+    this.sky = new THREE.Mesh(geometry, material);
+    this.scene.add(this.sky);
+  }
+
+  update(delta) {
+    // Subtle sky breathing
+    const t = Date.now() * 0.0001;
+    this.sky.material.color.setHSL(0.78, 0.4, 0.05 + Math.sin(t) * 0.01);
+  }
+}
 /* ============================================================
    BOOTSTRAP
    ============================================================ */
@@ -190,13 +314,24 @@ const engine = new Engine();
 const input = new InputManager();
 const sceneManager = new SceneManager();
 
+// Systems
+const city = new NeonCity(sceneManager.scene);
+const weather = new WeatherSystem(sceneManager.scene);
+const sky = new SkySystem(sceneManager.scene);
+
+// Characters
 const girl = new PlayerGirl(input);
 const robo = new RoboBoy(girl);
 
 sceneManager.scene.add(girl.mesh);
 sceneManager.scene.add(robo.mesh);
 
+// Register updates
 engine.register(girl);
 engine.register(robo);
+engine.register(city);
+engine.register(weather);
+engine.register(sky);
 
+// Start
 engine.start(sceneManager);
